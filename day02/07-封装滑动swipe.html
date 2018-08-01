@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        div {
+            width: 200px;
+            height: 200px;
+            background-color: aqua;
+            margin: 50px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div></div>
+    <!-- 轻轻的滑动，轻滑事件 swipe
+    swipe  分析
+    1  判断手指的个数，不能超过 1个
+    2  判断按下的事件，不能太长 800ms  自定义
+    3  判断按下的距离，不能太短，大于5px
+        0  判断距离
+        1  判断方向 -->
+
+
+<script>
+    var div = document.querySelector("div");
+    //按下的时间
+    var startTime;
+    //按下的坐标
+    var startX,startY;
+    //按下
+    div.addEventListener("touchstart",function (e) {
+        //1 判断手指的个数
+        if (e.touches.length > 1) {
+            return;
+        }
+        //2、记录按下的时间
+        startTime = Date.now();
+        //3、记录按下的坐标
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+    });
+    //离开
+    div.addEventListener("touchend",function (e) {
+        //1、判断手指的个数
+        if (e.changedTouches.length > 1) {
+            return;
+        }
+        //2、记录时间
+        var endTime = Date.now();
+        //
+        if (endTime - startTime > 800) {
+            return;
+        }
+        //4、记录离开的坐标
+        var endX = e.changedTouches[0].clientX;
+        var endY = e.changedTouches[0].clientY;
+        //滑动的方向
+        var direction;
+        //先判断距离
+        if (Math.abs(endX - startX)>5) {
+            //在水平方向上发生了移动
+            direction = endX>startX?"right":"left";
+        } else if (Math.abs(endY-startY)>5) {
+            //在垂直方向上发生移动
+            direction = endY>startY?"down":"up";
+        } else {
+            //没有发生移动
+            return;
+        }
+        //触发滑动的逻辑
+        console.log(direction);
+    });
+</script>
+</body>
+
+</html>

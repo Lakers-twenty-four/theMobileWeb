@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        div:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            background-color: aqua;
+            margin: 100px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div></div>
+    <!-- tap分析：
+    1 判断手指的个数 不能超过 1 个
+    2 判断按下的时间不能太长 300ms  自定义 
+    3 判断按下的滑动的距离 不能太大 5px
+
+    用到哪些触屏事件
+    1  touchstart,touchend
+    2  touchstart
+       touches.length
+       记录按下的时间  startTime
+       记录开始的坐标
+    3  touchend
+       记录松开的时间  endTime - startTime =>
+       记录松开手的坐标 结束的坐标-开始的坐标 -->
+    <script>
+        var div = document.querySelector("div");
+        //开始按下的时间
+        var startTime;
+        //开始按下的坐标
+        var startX, startY;
+        //按下
+        div.addEventListener("touchstart", function (e) {
+            // 1、判断手指的个数
+            if (e.touches.length > 1) {
+                return;
+            }
+            //2、记录按下的时间
+            startTime = Date.now();
+            //3、获取开始的坐标
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+        //离开
+        div.addEventListener("touchend", function (e) {
+            //1、判断手指的个数(记住--这里判断的是changedTouches)
+            if (e.changedTouches.length > 1) {
+                return;
+            }
+            //2
+            endTime = Date.now();
+            //判断按下时长
+            if (endTime - startTime > 300) {
+                return;
+            }
+            //3、获取松开手的坐标
+            var endX = e.changedTouches[0].clientX;
+            var endY = e.changedTouches[0].clientY;
+            //判断滑动的距离 5px
+            if (Math.abs(endX - startX) > 5 || Math.abs(endY - startY) > 5) {
+                return;
+            }
+            //通过验证，此时可以触发tap的点击的逻辑
+            console.log("自己的tap");
+        });
+    </script>
+</body>
+
+</html>
